@@ -1,7 +1,6 @@
 <msg>
 
  <from>A</from>
- <to>B</to>
 
  <payload>This message has a route from A to C (because does not contain any tags with name 'to') </payload>
 
