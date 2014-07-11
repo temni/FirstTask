@@ -9,23 +9,43 @@ You will need to compile this example first:
 To run the example type
   mvn camel:run
 
-You can see the routing rules by looking at the XML in the directory:
-  src/main/resources/META-INF/spring
+This is first task solution. It uses text files input (see in.A directory) instead of MQ - for more convinient testing (otherwise you need to have AcitveMQ installed and configured with appropriate Queues)
 
-To stop the example hit ctrl + c
 
-You can also run the example from your editor such as Eclipse, IDEA etc,
-by opening the org.apache.camel.example.console.CamelConsoleMain class
-and then right click, and chose run java application.
 
-This example is documented at
-  http://camel.apache.org/console-example.html
+For change the approach from text files to MQ just edit camel spring xml config (src/main/resources/META-INF/spring/camel-context.xml):
 
-If you hit any problems please talk to us on the Camel Forums
-  http://camel.apache.org/discussion-forums.html
+<camelContext xmlns="http://camel.apache.org/schema/spring">
+    <route autoStartup="
+      <from uri="file://in.A"/>
+      <choice>
+      <when>
+        <xpath>/msg/to/text()='B'</xpath>
+        <to uri="file://out.B/"/>
+      </when>
+      <otherwise>
+        <to uri="file://out.C/"/>
+      </otherwise>
+      </choice>
+    </route>
+</camelContext>
 
-Please help us make Apache Camel better - we appreciate any feedback you
-may have.  Enjoy!
+TO
 
-------------------------
-The Camel riders!
+<camelContext xmlns="http://camel.apache.org/schema/spring">
+    <route autoStartup="
+      <from uri="activemq:in.A"/>
+      <choice>
+      <when>
+        <xpath>/msg/to/text()='B'</xpath>
+        <to uri="activemq:out.B"/>
+      </when>
+      <otherwise>
+        <to uri="activemq:out.C"/>
+      </otherwise>
+      </choice>
+    </route>
+</camelContext>
+
+
+11.07.2014 Kirichenko Evgeniy for LiveTex company. 15:09 MSK
